@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>eBookForge - Professional eBook Editor</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <nav class="navbar">
+            <div class="nav-container">
+                <div class="logo">
+                    <i class="fas fa-book-open"></i>
+                    <span>eBookForge</span>
+                </div>
+                <ul class="nav-menu">
+                    <li><a href="#home">Home</a></li>
+                    <li><a href="#features">Features</a></li>
+                    <li><a href="#editor">Editor</a></li>
+                    <li><a href="#pricing">Pricing</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+                <div class="nav-toggle" id="mobile-menu">
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="hero-container">
+            <div class="hero-content">
+                <h1>Transform Your Ideas into Stunning eBooks</h1>
+                <p>Craft, edit, and publish professional eBooks with our intuitive online editor. No coding required – just your creativity.</p>
+                <div class="hero-buttons">
+                    <a href="#editor" class="btn btn-primary">Start Editing Now</a>
+                    <a href="#features" class="btn btn-secondary">Explore Features</a>
+                </div>
+            </div>
+            <div class="hero-image">
+                <img src="https://via.placeholder.com/600x400/4A90E2/FFFFFF?text=eBook+Editor" alt="eBook Editor Interface">
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="features">
+        <div class="container">
+            <h2>Powerful Features for Every Author</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <i class="fas fa-edit"></i>
+                    <h3>Rich Text Editing</h3>
+                    <p>Format text, add images, tables, and hyperlinks with WYSIWYG precision.</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-table"></i>
+                    <h3>Table of Contents</h3>
+                    <p>Auto-generate dynamic TOCs and navigate seamlessly through chapters.</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-font"></i>
+                    <h3>Typography Control</h3>
+                    <p>Choose from hundreds of fonts, adjust sizes, and ensure mobile-friendly layouts.</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-image"></i>
+                    <h3>Media Integration</h3>
+                    <p>Embed images, videos, and audio to bring your story to life.</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-download"></i>
+                    <h3>Export Options</h3>
+                    <p>Download as EPUB, MOBI, PDF, or HTML for any platform.</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                    <h3>Cloud Sync</h3>
+                    <p>Save progress automatically and access from any device.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Editor Demo Section -->
+    <section id="editor" class="editor">
+        <div class="container">
+            <h2>Try the Editor</h2>
+            <p>Experience the power of eBookForge with this live demo. Start typing below!</p>
+            <div class="editor-container">
+                <div class="toolbar">
+                    <button class="tool-btn" onclick="formatText('bold')"><i class="fas fa-bold"></i></button>
+                    <button class="tool-btn" onclick="formatText('italic')"><i class="fas fa-italic"></i></button>
+                    <button class="tool-btn" onclick="formatText('underline')"><i class="fas fa-underline"></i></button>
+                    <button class="tool-btn" onclick="insertImage()"><i class="fas fa-image"></i></button>
+                    <button class="tool-btn" onclick="exportDoc()"><i class="fas fa-download"></i></button>
+                </div>
+                <div class="editor-content" contenteditable="true" id="editorContent">
+                    <p>Welcome to your eBook! Start writing your story here...</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section id="pricing" class="pricing">
+        <div class="container">
+            <h2>Choose Your Plan</h2>
+            <div class="pricing-grid">
+                <div class="price-card">
+                    <h3>Free</h3>
+                    <p class="price">$0<span>/month</span></p>
+                    <ul>
+                        <li>Basic Editing</li>
+                        <li>5 eBooks Max</li>
+                        <li>EPUB Export</li>
+                        <li>Community Support</li>
+                    </ul>
+                    <a href="#" class="btn btn-primary">Get Started</a>
+                </div>
+                <div class="price-card featured">
+                    <span class="featured-badge">Popular</span>
+                    <h3>Pro</h3>
+                    <p class="price">$9.99<span>/month</span></p>
+                    <ul>
+                        <li>All Features</li>
+                        <li>Unlimited eBooks</li>
+                        <li>All Formats</li>
+                        <li>Priority Support</li>
+                    </ul>
+                    <a href="#" class="btn btn-primary">Subscribe Now</a>
+                </div>
+                <div class="price-card">
+                    <h3>Enterprise</h3>
+                    <p class="price">$29.99<span>/month</span></p>
+                    <ul>
+                        <li>Team Collaboration</li>
+                        <li>Custom Branding</li>
+                        <li>API Access</li>
+                        <li>Dedicated Manager</li>
+                    </ul>
+                    <a href="#" class="btn btn-primary">Contact Sales</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="contact">
+        <div class="container">
+            <h2>Get in Touch</h2>
+            <p>Have questions? We'd love to hear from you.</p>
+            <form class="contact-form">
+                <input type="text" placeholder="Your Name" required>
+                <input type="email" placeholder="Your Email" required>
+                <textarea placeholder="Your Message" rows="5" required></textarea>
+                <button type="submit" class="btn btn-primary">Send Message</button>
+            </form>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <div class="logo">
+                        <i class="fas fa-book-open"></i>
+                        <span>eBookForge</span>
+                    </div>
+                    <p>Empowering authors to create digital masterpieces.</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Product</h4>
+                    <ul>
+                        <li><a href="#">Features</a></li>
+                        <li><a href="#">Pricing</a></li>
+                        <li><a href="#">Editor</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Support</h4>
+                    <ul>
+                        <li><a href="#">Help Center</a></li>
+                        <li><a href="#">Tutorials</a></li>
+                        <li><a href="#">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Legal</h4>
+                    <ul>
+                        <li><a href="#">Privacy</a></li>
+                        <li><a href="#">Terms</a></li>
+                        <li><a href="#">Cookies</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 eBookForge. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

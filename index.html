@@ -3,38 +3,635 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>eBookForge - Professional eBook Editor</title>
-    <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <title>Pro eBook Editor</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4361ee;
+            --secondary: #3f37c9;
+            --accent: #4895ef;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --success: #4cc9f0;
+            --warning: #f72585;
+            --gray: #6c757d;
+            --light-gray: #e9ecef;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fb;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+        
+        .container {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            max-width: 1400px;
+            margin: 0 auto;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            background-color: white;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .logo i {
+            font-size: 1.8rem;
+        }
+        
+        .logo h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+        
+        .toolbar {
+            display: flex;
+            background-color: var(--light);
+            padding: 0.8rem 1.5rem;
+            border-bottom: 1px solid var(--light-gray);
+            flex-wrap: wrap;
+            gap: 5px;
+        }
+        
+        .tool-group {
+            display: flex;
+            gap: 5px;
+            padding-right: 15px;
+            margin-right: 15px;
+            border-right: 1px solid var(--light-gray);
+        }
+        
+        .btn {
+            background: white;
+            border: 1px solid var(--light-gray);
+            border-radius: 4px;
+            padding: 8px 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+        
+        .btn:hover {
+            background-color: var(--light-gray);
+        }
+        
+        .btn i {
+            font-size: 0.9rem;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+            border: 1px solid var(--primary);
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--secondary);
+        }
+        
+        .main-content {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+        
+        .sidebar {
+            width: 250px;
+            background-color: var(--light);
+            border-right: 1px solid var(--light-gray);
+            padding: 1.5rem;
+            overflow-y: auto;
+        }
+        
+        .sidebar-section {
+            margin-bottom: 2rem;
+        }
+        
+        .sidebar-section h3 {
+            font-size: 1rem;
+            margin-bottom: 1rem;
+            color: var(--gray);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+        
+        .sidebar-list {
+            list-style: none;
+        }
+        
+        .sidebar-list li {
+            padding: 0.7rem 0.8rem;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.2s;
+        }
+        
+        .sidebar-list li:hover {
+            background-color: white;
+        }
+        
+        .sidebar-list li.active {
+            background-color: white;
+            color: var(--primary);
+            font-weight: 500;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+        
+        .editor-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 2rem;
+            overflow-y: auto;
+        }
+        
+        .editor-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .editor-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            border: none;
+            outline: none;
+            width: 70%;
+            padding: 0.5rem 0;
+            border-bottom: 2px solid transparent;
+        }
+        
+        .editor-title:focus {
+            border-bottom: 2px solid var(--primary);
+        }
+        
+        .editor-meta {
+            display: flex;
+            gap: 15px;
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+        
+        .editor {
+            flex: 1;
+            border: 1px solid var(--light-gray);
+            border-radius: 8px;
+            padding: 2rem;
+            line-height: 1.8;
+            font-size: 1.1rem;
+            overflow-y: auto;
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+        }
+        
+        .editor:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+        
+        .status-bar {
+            background-color: var(--light);
+            padding: 0.8rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            color: var(--gray);
+            font-size: 0.9rem;
+            border-top: 1px solid var(--light-gray);
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 100;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-content {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .modal-header h2 {
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+        
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--gray);
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid var(--light-gray);
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+        
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 1.5rem;
+        }
+        
+        @media (max-width: 768px) {
+            .main-content {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                height: auto;
+                border-right: none;
+                border-bottom: 1px solid var(--light-gray);
+            }
+            
+            .toolbar {
+                padding: 0.5rem;
+            }
+            
+            .tool-group {
+                margin-right: 10px;
+                padding-right: 10px;
+            }
+        }
+    </style>
 </head>
 <body>
-    <!-- Header -->
-    <header class="header">
-        <nav class="navbar">
-            <div class="nav-container">
-                <div class="logo">
-                    <i class="fas fa-book-open"></i>
-                    <span>eBookForge</span>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <i class="fas fa-book-open"></i>
+                <h1>Pro eBook Editor</h1>
+            </div>
+            <div class="header-actions">
+                <button class="btn btn-primary" id="saveBtn">
+                    <i class="fas fa-save"></i> Save eBook
+                </button>
+            </div>
+        </header>
+        
+        <div class="toolbar">
+            <div class="tool-group">
+                <button class="btn" id="boldBtn" title="Bold">
+                    <i class="fas fa-bold"></i>
+                </button>
+                <button class="btn" id="italicBtn" title="Italic">
+                    <i class="fas fa-italic"></i>
+                </button>
+                <button class="btn" id="underlineBtn" title="Underline">
+                    <i class="fas fa-underline"></i>
+                </button>
+            </div>
+            
+            <div class="tool-group">
+                <button class="btn" id="alignLeftBtn" title="Align Left">
+                    <i class="fas fa-align-left"></i>
+                </button>
+                <button class="btn" id="alignCenterBtn" title="Align Center">
+                    <i class="fas fa-align-center"></i>
+                </button>
+                <button class="btn" id="alignRightBtn" title="Align Right">
+                    <i class="fas fa-align-right"></i>
+                </button>
+                <button class="btn" id="alignJustifyBtn" title="Align Justify">
+                    <i class="fas fa-align-justify"></i>
+                </button>
+            </div>
+            
+            <div class="tool-group">
+                <button class="btn" id="bulletListBtn" title="Bullet List">
+                    <i class="fas fa-list-ul"></i>
+                </button>
+                <button class="btn" id="numberListBtn" title="Numbered List">
+                    <i class="fas fa-list-ol"></i>
+                </button>
+            </div>
+            
+            <div class="tool-group">
+                <button class="btn" id="imageBtn" title="Insert Image">
+                    <i class="fas fa-image"></i>
+                </button>
+                <button class="btn" id="linkBtn" title="Insert Link">
+                    <i class="fas fa-link"></i>
+                </button>
+            </div>
+            
+            <div class="tool-group">
+                <select class="btn" id="fontFamily">
+                    <option value="Arial">Arial</option>
+                    <option value="Georgia">Georgia</option>
+                    <option value="Times New Roman">Times New Roman</option>
+                    <option value="Verdana">Verdana</option>
+                </select>
+                
+                <select class="btn" id="fontSize">
+                    <option value="1">Small</option>
+                    <option value="3" selected>Normal</option>
+                    <option value="5">Large</option>
+                    <option value="7">X-Large</option>
+                </select>
+            </div>
+            
+            <div class="tool-group">
+                <button class="btn" id="undoBtn" title="Undo">
+                    <i class="fas fa-undo"></i>
+                </button>
+                <button class="btn" id="redoBtn" title="Redo">
+                    <i class="fas fa-redo"></i>
+                </button>
+            </div>
+        </div>
+        
+        <div class="main-content">
+            <div class="sidebar">
+                <div class="sidebar-section">
+                    <h3>My eBooks</h3>
+                    <ul class="sidebar-list">
+                        <li class="active"><i class="fas fa-file-alt"></i> My First eBook</li>
+                        <li><i class="fas fa-file-alt"></i> Travel Guide</li>
+                        <li><i class="fas fa-file-alt"></i> Cookbook</li>
+                        <li><i class="fas fa-file-alt"></i> Poetry Collection</li>
+                    </ul>
                 </div>
-                <ul class="nav-menu">
-                    <li><a href="#home">Home</a></li>
-                    <li><a href="#features">Features</a></li>
-                    <li><a href="#editor">Editor</a></li>
-                    <li><a href="#pricing">Pricing</a></li>
-                    <li><a href="#contact">Contact</a></li>
-                </ul>
-                <div class="nav-toggle" id="mobile-menu">
-                    <span class="bar"></span>
-                    <span class="bar"></span>
-                    <span class="bar"></span>
+                
+                <div class="sidebar-section">
+                    <h3>Chapters</h3>
+                    <ul class="sidebar-list">
+                        <li class="active"><i class="fas fa-bookmark"></i> Introduction</li>
+                        <li><i class="fas fa-bookmark"></i> Chapter 1</li>
+                        <li><i class="fas fa-bookmark"></i> Chapter 2</li>
+                        <li><i class="fas fa-bookmark"></i> Chapter 3</li>
+                        <li><i class="fas fa-bookmark"></i> Conclusion</li>
+                    </ul>
+                </div>
+                
+                <div class="sidebar-section">
+                    <h3>Export Options</h3>
+                    <ul class="sidebar-list">
+                        <li><i class="fas fa-file-pdf"></i> Export as PDF</li>
+                        <li><i class="fas fa-file-word"></i> Export as Word</li>
+                        <li><i class="fas fa-file-ebook"></i> Export as EPUB</li>
+                    </ul>
                 </div>
             </div>
-        </nav>
-    </header>
+            
+            <div class="editor-container">
+                <div class="editor-header">
+                    <input type="text" class="editor-title" value="My First eBook" id="ebookTitle">
+                    <div class="editor-meta">
+                        <span><i class="fas fa-clock"></i> Last saved: 2 hours ago</span>
+                        <span><i class="fas fa-file-word-count"></i> 1,245 words</span>
+                    </div>
+                </div>
+                
+                <div class="editor" contenteditable="true" id="editor">
+                    <h1>Introduction</h1>
+                    <p>Welcome to your new eBook! This is a professional eBook editor that allows you to create, edit, and format your content with ease.</p>
+                    
+                    <p>You can use the toolbar above to format your text, add images, create lists, and much more. The sidebar provides quick access to your chapters and export options.</p>
+                    
+                    <h2>Getting Started</h2>
+                    <p>To begin editing, simply click anywhere in this text and start typing. You can use the formatting tools to style your text as needed.</p>
+                    
+                    <p>Some features of this editor include:</p>
+                    <ul>
+                        <li>Text formatting (bold, italic, underline)</li>
+                        <li>Multiple alignment options</li>
+                        <li>Bullet and numbered lists</li>
+                        <li>Image insertion</li>
+                        <li>Link creation</li>
+                        <li>Font family and size selection</li>
+                    </ul>
+                    
+                    <p>When you're finished, use the export options in the sidebar to download your eBook in various formats.</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="status-bar">
+            <div class="status-left">
+                <span>Words: 245</span>
+                <span>Characters: 1,458</span>
+            </div>
+            <div class="status-right">
+                <span>Ready</span>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Save Modal -->
+    <div class="modal" id="saveModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Save eBook</h2>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="form-group">
+                <label for="saveFileName">File Name</label>
+                <input type="text" class="form-control" id="saveFileName" value="my-ebook">
+            </div>
+            <div class="form-group">
+                <label for="saveFormat">Format</label>
+                <select class="form-control" id="saveFormat">
+                    <option value="pdf">PDF Document</option>
+                    <option value="docx">Word Document</option>
+                    <option value="epub">EPUB Format</option>
+                    <option value="html">HTML File</option>
+                </select>
+            </div>
+            <div class="modal-footer">
+                <button class="btn" id="cancelSave">Cancel</button>
+                <button class="btn btn-primary" id="confirmSave">Save</button>
+            </div>
+        </div>
+    </div>
 
-    <!-- Hero Section -->
-    <section id="home" class="hero">
+    <script>
+        // DOM Elements
+        const editor = document.getElementById('editor');
+        const saveBtn = document.getElementById('saveBtn');
+        const saveModal = document.getElementById('saveModal');
+        const closeModal = document.querySelector('.close-modal');
+        const cancelSave = document.getElementById('cancelSave');
+        const confirmSave = document.getElementById('confirmSave');
+        
+        // Formatting buttons
+        const boldBtn = document.getElementById('boldBtn');
+        const italicBtn = document.getElementById('italicBtn');
+        const underlineBtn = document.getElementById('underlineBtn');
+        
+        // Alignment buttons
+        const alignLeftBtn = document.getElementById('alignLeftBtn');
+        const alignCenterBtn = document.getElementById('alignCenterBtn');
+        const alignRightBtn = document.getElementById('alignRightBtn');
+        const alignJustifyBtn = document.getElementById('alignJustifyBtn');
+        
+        // List buttons
+        const bulletListBtn = document.getElementById('bulletListBtn');
+        const numberListBtn = document.getElementById('numberListBtn');
+        
+        // Font controls
+        const fontFamily = document.getElementById('fontFamily');
+        const fontSize = document.getElementById('fontSize');
+        
+        // Event Listeners
+        saveBtn.addEventListener('click', () => {
+            saveModal.style.display = 'flex';
+        });
+        
+        closeModal.addEventListener('click', () => {
+            saveModal.style.display = 'none';
+        });
+        
+        cancelSave.addEventListener('click', () => {
+            saveModal.style.display = 'none';
+        });
+        
+        confirmSave.addEventListener('click', () => {
+            const fileName = document.getElementById('saveFileName').value;
+            const format = document.getElementById('saveFormat').value;
+            alert(`Saving "${fileName}" in ${format.toUpperCase()} format`);
+            saveModal.style.display = 'none';
+        });
+        
+        // Formatting functions
+        boldBtn.addEventListener('click', () => {
+            document.execCommand('bold', false, null);
+        });
+        
+        italicBtn.addEventListener('click', () => {
+            document.execCommand('italic', false, null);
+        });
+        
+        underlineBtn.addEventListener('click', () => {
+            document.execCommand('underline', false, null);
+        });
+        
+        // Alignment functions
+        alignLeftBtn.addEventListener('click', () => {
+            document.execCommand('justifyLeft', false, null);
+        });
+        
+        alignCenterBtn.addEventListener('click', () => {
+            document.execCommand('justifyCenter', false, null);
+        });
+        
+        alignRightBtn.addEventListener('click', () => {
+            document.execCommand('justifyRight', false, null);
+        });
+        
+        alignJustifyBtn.addEventListener('click', () => {
+            document.execCommand('justifyFull', false, null);
+        });
+        
+        // List functions
+        bulletListBtn.addEventListener('click', () => {
+            document.execCommand('insertUnorderedList', false, null);
+        });
+        
+        numberListBtn.addEventListener('click', () => {
+            document.execCommand('insertOrderedList', false, null);
+        });
+        
+        // Font controls
+        fontFamily.addEventListener('change', () => {
+            document.execCommand('fontName', false, fontFamily.value);
+        });
+        
+        fontSize.addEventListener('change', () => {
+            document.execCommand('fontSize', false, fontSize.value);
+        });
+        
+        // Close modal when clicking outside
+        window.addEventListener('click', (e) => {
+            if (e.target === saveModal) {
+                saveModal.style.display = 'none';
+            }
+        });
+        
+        // Update word count (simplified)
+        editor.addEventListener('input', () => {
+            const text = editor.innerText;
+            const wordCount = text.trim().split(/\s+/).length;
+            const charCount = text.length;
+            
+            document.querySelector('.status-left').innerHTML = `
+                <span>Words: ${wordCount}</span>
+                <span>Characters: ${charCount}</span>
+            `;
+        });
+    </script>
+</body>
+    </html>    <section id="home" class="hero">
         <div class="hero-container">
             <div class="hero-content">
                 <h1>Transform Your Ideas into Stunning eBooks</h1>

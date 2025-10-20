@@ -114,6 +114,12 @@
             background-color: var(--secondary);
         }
         
+        .btn.active {
+            background-color: var(--accent);
+            color: white;
+            border-color: var(--accent);
+        }
+        
         .main-content {
             display: flex;
             flex: 1;
@@ -213,10 +219,10 @@
             overflow-y: auto;
             background-color: white;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+            outline: none;
         }
         
         .editor:focus {
-            outline: none;
             border-color: var(--accent);
         }
         
@@ -387,17 +393,24 @@
             
             <div class="tool-group">
                 <select class="btn" id="fontFamily">
-                    <option value="Arial">Arial</option>
-                    <option value="Georgia">Georgia</option>
-                    <option value="Times New Roman">Times New Roman</option>
-                    <option value="Verdana">Verdana</option>
+                    <option value="Arial, Helvetica, sans-serif">Arial</option>
+                    <option value="Georgia, serif">Georgia</option>
+                    <option value="'Times New Roman', Times, serif">Times New Roman</option>
+                    <option value="Verdana, Geneva, sans-serif">Verdana</option>
                 </select>
                 
                 <select class="btn" id="fontSize">
-                    <option value="1">Small</option>
-                    <option value="3" selected>Normal</option>
-                    <option value="5">Large</option>
-                    <option value="7">X-Large</option>
+                    <option value="14px">Small</option>
+                    <option value="16px" selected>Normal</option>
+                    <option value="18px">Large</option>
+                    <option value="20px">X-Large</option>
+                </select>
+                
+                <select class="btn" id="headingSelect">
+                    <option value="p">Paragraph</option>
+                    <option value="h1">Heading 1</option>
+                    <option value="h2">Heading 2</option>
+                    <option value="h3">Heading 3</option>
                 </select>
             </div>
             
@@ -415,31 +428,37 @@
             <div class="sidebar">
                 <div class="sidebar-section">
                     <h3>My eBooks</h3>
-                    <ul class="sidebar-list">
-                        <li class="active"><i class="fas fa-file-alt"></i> My First eBook</li>
-                        <li><i class="fas fa-file-alt"></i> Travel Guide</li>
-                        <li><i class="fas fa-file-alt"></i> Cookbook</li>
-                        <li><i class="fas fa-file-alt"></i> Poetry Collection</li>
+                    <ul class="sidebar-list" id="ebookList">
+                        <li class="active" data-ebook="1"><i class="fas fa-file-alt"></i> My First eBook</li>
+                        <li data-ebook="2"><i class="fas fa-file-alt"></i> Travel Guide</li>
+                        <li data-ebook="3"><i class="fas fa-file-alt"></i> Cookbook</li>
+                        <li data-ebook="4"><i class="fas fa-file-alt"></i> Poetry Collection</li>
                     </ul>
+                    <button class="btn" id="newEbookBtn" style="margin-top: 10px; width: 100%;">
+                        <i class="fas fa-plus"></i> New eBook
+                    </button>
                 </div>
                 
                 <div class="sidebar-section">
                     <h3>Chapters</h3>
-                    <ul class="sidebar-list">
-                        <li class="active"><i class="fas fa-bookmark"></i> Introduction</li>
-                        <li><i class="fas fa-bookmark"></i> Chapter 1</li>
-                        <li><i class="fas fa-bookmark"></i> Chapter 2</li>
-                        <li><i class="fas fa-bookmark"></i> Chapter 3</li>
-                        <li><i class="fas fa-bookmark"></i> Conclusion</li>
+                    <ul class="sidebar-list" id="chapterList">
+                        <li class="active" data-chapter="1"><i class="fas fa-bookmark"></i> Introduction</li>
+                        <li data-chapter="2"><i class="fas fa-bookmark"></i> Chapter 1</li>
+                        <li data-chapter="3"><i class="fas fa-bookmark"></i> Chapter 2</li>
+                        <li data-chapter="4"><i class="fas fa-bookmark"></i> Chapter 3</li>
+                        <li data-chapter="5"><i class="fas fa-bookmark"></i> Conclusion</li>
                     </ul>
+                    <button class="btn" id="newChapterBtn" style="margin-top: 10px; width: 100%;">
+                        <i class="fas fa-plus"></i> New Chapter
+                    </button>
                 </div>
                 
                 <div class="sidebar-section">
                     <h3>Export Options</h3>
                     <ul class="sidebar-list">
-                        <li><i class="fas fa-file-pdf"></i> Export as PDF</li>
-                        <li><i class="fas fa-file-word"></i> Export as Word</li>
-                        <li><i class="fas fa-file-ebook"></i> Export as EPUB</li>
+                        <li id="exportPdf"><i class="fas fa-file-pdf"></i> Export as PDF</li>
+                        <li id="exportWord"><i class="fas fa-file-word"></i> Export as Word</li>
+                        <li id="exportEpub"><i class="fas fa-file-ebook"></i> Export as EPUB</li>
                     </ul>
                 </div>
             </div>
@@ -448,12 +467,12 @@
                 <div class="editor-header">
                     <input type="text" class="editor-title" value="My First eBook" id="ebookTitle">
                     <div class="editor-meta">
-                        <span><i class="fas fa-clock"></i> Last saved: 2 hours ago</span>
-                        <span><i class="fas fa-file-word-count"></i> 1,245 words</span>
+                        <span><i class="fas fa-clock"></i> Last saved: <span id="lastSaved">Just now</span></span>
+                        <span><i class="fas fa-file-word-count"></i> <span id="wordCount">245</span> words</span>
                     </div>
                 </div>
                 
-                <div class="editor" contenteditable="true" id="editor">
+                <div class="editor" id="editor" contenteditable="true">
                     <h1>Introduction</h1>
                     <p>Welcome to your new eBook! This is a professional eBook editor that allows you to create, edit, and format your content with ease.</p>
                     
@@ -479,11 +498,11 @@
         
         <div class="status-bar">
             <div class="status-left">
-                <span>Words: 245</span>
-                <span>Characters: 1,458</span>
+                <span>Words: <span id="wordCountStatus">245</span></span>
+                <span>Characters: <span id="charCountStatus">1,458</span></span>
             </div>
             <div class="status-right">
-                <span>Ready</span>
+                <span id="editorStatus">Ready</span>
             </div>
         </div>
     </div>
@@ -514,15 +533,72 @@
             </div>
         </div>
     </div>
+    
+    <!-- Image Modal -->
+    <div class="modal" id="imageModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Insert Image</h2>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="form-group">
+                <label for="imageUrl">Image URL</label>
+                <input type="text" class="form-control" id="imageUrl" placeholder="https://example.com/image.jpg">
+            </div>
+            <div class="form-group">
+                <label for="imageAlt">Alternative Text</label>
+                <input type="text" class="form-control" id="imageAlt" placeholder="Description of image">
+            </div>
+            <div class="modal-footer">
+                <button class="btn" id="cancelImage">Cancel</button>
+                <button class="btn btn-primary" id="confirmImage">Insert</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Link Modal -->
+    <div class="modal" id="linkModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Insert Link</h2>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="form-group">
+                <label for="linkUrl">URL</label>
+                <input type="text" class="form-control" id="linkUrl" placeholder="https://example.com">
+            </div>
+            <div class="form-group">
+                <label for="linkText">Link Text</label>
+                <input type="text" class="form-control" id="linkText" placeholder="Click here">
+            </div>
+            <div class="modal-footer">
+                <button class="btn" id="cancelLink">Cancel</button>
+                <button class="btn btn-primary" id="confirmLink">Insert</button>
+            </div>
+        </div>
+    </div>
 
     <script>
         // DOM Elements
         const editor = document.getElementById('editor');
         const saveBtn = document.getElementById('saveBtn');
         const saveModal = document.getElementById('saveModal');
-        const closeModal = document.querySelector('.close-modal');
+        const imageModal = document.getElementById('imageModal');
+        const linkModal = document.getElementById('linkModal');
+        const closeModals = document.querySelectorAll('.close-modal');
         const cancelSave = document.getElementById('cancelSave');
         const confirmSave = document.getElementById('confirmSave');
+        const cancelImage = document.getElementById('cancelImage');
+        const confirmImage = document.getElementById('confirmImage');
+        const cancelLink = document.getElementById('cancelLink');
+        const confirmLink = document.getElementById('confirmLink');
+        const ebookList = document.getElementById('ebookList');
+        const chapterList = document.getElementById('chapterList');
+        const newEbookBtn = document.getElementById('newEbookBtn');
+        const newChapterBtn = document.getElementById('newChapterBtn');
+        const exportPdf = document.getElementById('exportPdf');
+        const exportWord = document.getElementById('exportWord');
+        const exportEpub = document.getElementById('exportEpub');
         
         // Formatting buttons
         const boldBtn = document.getElementById('boldBtn');
@@ -539,272 +615,399 @@
         const bulletListBtn = document.getElementById('bulletListBtn');
         const numberListBtn = document.getElementById('numberListBtn');
         
+        // Insert buttons
+        const imageBtn = document.getElementById('imageBtn');
+        const linkBtn = document.getElementById('linkBtn');
+        
         // Font controls
         const fontFamily = document.getElementById('fontFamily');
         const fontSize = document.getElementById('fontSize');
+        const headingSelect = document.getElementById('headingSelect');
         
-        // Event Listeners
+        // Undo/Redo
+        const undoBtn = document.getElementById('undoBtn');
+        const redoBtn = document.getElementById('redoBtn');
+        
+        // State variables
+        let currentEbook = 1;
+        let currentChapter = 1;
+        let editHistory = [];
+        let historyIndex = -1;
+        
+        // Initialize editor
+        function initEditor() {
+            updateWordCount();
+            saveState();
+            
+            // Set initial content
+            const content = localStorage.getItem(`ebook-${currentEbook}-chapter-${currentChapter}`);
+            if (content) {
+                editor.innerHTML = content;
+            }
+        }
+        
+        // Event Listeners for Modals
         saveBtn.addEventListener('click', () => {
             saveModal.style.display = 'flex';
         });
         
-        closeModal.addEventListener('click', () => {
-            saveModal.style.display = 'none';
+        imageBtn.addEventListener('click', () => {
+            imageModal.style.display = 'flex';
+        });
+        
+        linkBtn.addEventListener('click', () => {
+            linkModal.style.display = 'flex';
+        });
+        
+        // Close modals
+        closeModals.forEach(closeBtn => {
+            closeBtn.addEventListener('click', (e) => {
+                e.target.closest('.modal').style.display = 'none';
+            });
         });
         
         cancelSave.addEventListener('click', () => {
             saveModal.style.display = 'none';
         });
         
+        cancelImage.addEventListener('click', () => {
+            imageModal.style.display = 'none';
+        });
+        
+        cancelLink.addEventListener('click', () => {
+            linkModal.style.display = 'none';
+        });
+        
+        // Confirm actions
         confirmSave.addEventListener('click', () => {
             const fileName = document.getElementById('saveFileName').value;
             const format = document.getElementById('saveFormat').value;
             alert(`Saving "${fileName}" in ${format.toUpperCase()} format`);
             saveModal.style.display = 'none';
+            
+            // Update last saved time
+            document.getElementById('lastSaved').textContent = 'Just now';
+        });
+        
+        confirmImage.addEventListener('click', () => {
+            const imageUrl = document.getElementById('imageUrl').value;
+            const imageAlt = document.getElementById('imageAlt').value;
+            
+            if (imageUrl) {
+                // Create image element
+                const img = document.createElement('img');
+                img.src = imageUrl;
+                img.alt = imageAlt;
+                img.style.maxWidth = '100%';
+                
+                // Insert at cursor position
+                insertAtCursor(img);
+                imageModal.style.display = 'none';
+                
+                // Clear form
+                document.getElementById('imageUrl').value = '';
+                document.getElementById('imageAlt').value = '';
+                
+                saveState();
+            } else {
+                alert('Please enter an image URL');
+            }
+        });
+        
+        confirmLink.addEventListener('click', () => {
+            const linkUrl = document.getElementById('linkUrl').value;
+            const linkText = document.getElementById('linkText').value;
+            
+            if (linkUrl) {
+                // Create link element
+                const link = document.createElement('a');
+                link.href = linkUrl;
+                link.textContent = linkText || linkUrl;
+                link.target = '_blank';
+                
+                // Insert at cursor position
+                insertAtCursor(link);
+                linkModal.style.display = 'none';
+                
+                // Clear form
+                document.getElementById('linkUrl').value = '';
+                document.getElementById('linkText').value = '';
+                
+                saveState();
+            } else {
+                alert('Please enter a URL');
+            }
         });
         
         // Formatting functions
         boldBtn.addEventListener('click', () => {
             document.execCommand('bold', false, null);
+            updateActiveButtons();
+            saveState();
         });
         
         italicBtn.addEventListener('click', () => {
             document.execCommand('italic', false, null);
+            updateActiveButtons();
+            saveState();
         });
         
         underlineBtn.addEventListener('click', () => {
             document.execCommand('underline', false, null);
+            updateActiveButtons();
+            saveState();
         });
         
         // Alignment functions
         alignLeftBtn.addEventListener('click', () => {
             document.execCommand('justifyLeft', false, null);
+            updateActiveButtons();
+            saveState();
         });
         
         alignCenterBtn.addEventListener('click', () => {
             document.execCommand('justifyCenter', false, null);
+            updateActiveButtons();
+            saveState();
         });
         
         alignRightBtn.addEventListener('click', () => {
             document.execCommand('justifyRight', false, null);
+            updateActiveButtons();
+            saveState();
         });
         
         alignJustifyBtn.addEventListener('click', () => {
             document.execCommand('justifyFull', false, null);
+            updateActiveButtons();
+            saveState();
         });
         
         // List functions
         bulletListBtn.addEventListener('click', () => {
             document.execCommand('insertUnorderedList', false, null);
+            saveState();
         });
         
         numberListBtn.addEventListener('click', () => {
             document.execCommand('insertOrderedList', false, null);
+            saveState();
         });
         
         // Font controls
         fontFamily.addEventListener('change', () => {
             document.execCommand('fontName', false, fontFamily.value);
+            saveState();
         });
         
         fontSize.addEventListener('change', () => {
             document.execCommand('fontSize', false, fontSize.value);
+            saveState();
+        });
+        
+        headingSelect.addEventListener('change', () => {
+            const heading = headingSelect.value;
+            if (heading === 'p') {
+                document.execCommand('formatBlock', false, '<p>');
+            } else {
+                document.execCommand('formatBlock', false, `<${heading}>`);
+            }
+            saveState();
+        });
+        
+        // Undo/Redo
+        undoBtn.addEventListener('click', () => {
+            if (historyIndex > 0) {
+                historyIndex--;
+                editor.innerHTML = editHistory[historyIndex];
+                updateWordCount();
+            }
+        });
+        
+        redoBtn.addEventListener('click', () => {
+            if (historyIndex < editHistory.length - 1) {
+                historyIndex++;
+                editor.innerHTML = editHistory[historyIndex];
+                updateWordCount();
+            }
+        });
+        
+        // eBook and Chapter management
+        ebookList.addEventListener('click', (e) => {
+            if (e.target.tagName === 'LI') {
+                // Save current content
+                localStorage.setItem(`ebook-${currentEbook}-chapter-${currentChapter}`, editor.innerHTML);
+                
+                // Update active eBook
+                document.querySelectorAll('#ebookList li').forEach(li => li.classList.remove('active'));
+                e.target.classList.add('active');
+                
+                // Load new eBook
+                currentEbook = e.target.getAttribute('data-ebook');
+                const title = e.target.textContent;
+                document.getElementById('ebookTitle').value = title;
+                
+                // Load first chapter
+                document.querySelectorAll('#chapterList li').forEach(li => li.classList.remove('active'));
+                document.querySelector('#chapterList li').classList.add('active');
+                currentChapter = 1;
+                
+                const content = localStorage.getItem(`ebook-${currentEbook}-chapter-${currentChapter}`);
+                editor.innerHTML = content || '<p>Start writing your eBook here...</p>';
+                
+                updateWordCount();
+                saveState();
+            }
+        });
+        
+        chapterList.addEventListener('click', (e) => {
+            if (e.target.tagName === 'LI') {
+                // Save current content
+                localStorage.setItem(`ebook-${currentEbook}-chapter-${currentChapter}`, editor.innerHTML);
+                
+                // Update active chapter
+                document.querySelectorAll('#chapterList li').forEach(li => li.classList.remove('active'));
+                e.target.classList.add('active');
+                
+                // Load new chapter
+                currentChapter = e.target.getAttribute('data-chapter');
+                const content = localStorage.getItem(`ebook-${currentEbook}-chapter-${currentChapter}`);
+                editor.innerHTML = content || '<p>Start writing your chapter here...</p>';
+                
+                updateWordCount();
+                saveState();
+            }
+        });
+        
+        newEbookBtn.addEventListener('click', () => {
+            const ebookName = prompt('Enter eBook name:');
+            if (ebookName) {
+                const newId = ebookList.children.length + 1;
+                const newEbook = document.createElement('li');
+                newEbook.setAttribute('data-ebook', newId);
+                newEbook.innerHTML = `<i class="fas fa-file-alt"></i> ${ebookName}`;
+                ebookList.appendChild(newEbook);
+            }
+        });
+        
+        newChapterBtn.addEventListener('click', () => {
+            const chapterName = prompt('Enter chapter name:');
+            if (chapterName) {
+                const newId = chapterList.children.length + 1;
+                const newChapter = document.createElement('li');
+                newChapter.setAttribute('data-chapter', newId);
+                newChapter.innerHTML = `<i class="fas fa-bookmark"></i> ${chapterName}`;
+                chapterList.appendChild(newChapter);
+            }
+        });
+        
+        // Export functions
+        exportPdf.addEventListener('click', () => {
+            alert('Exporting as PDF...');
+        });
+        
+        exportWord.addEventListener('click', () => {
+            alert('Exporting as Word document...');
+        });
+        
+        exportEpub.addEventListener('click', () => {
+            alert('Exporting as EPUB...');
         });
         
         // Close modal when clicking outside
         window.addEventListener('click', (e) => {
-            if (e.target === saveModal) {
-                saveModal.style.display = 'none';
+            if (e.target.classList.contains('modal')) {
+                e.target.style.display = 'none';
             }
         });
         
-        // Update word count (simplified)
-        editor.addEventListener('input', () => {
-            const text = editor.innerText;
-            const wordCount = text.trim().split(/\s+/).length;
+        // Update word count
+        function updateWordCount() {
+            const text = editor.innerText || editor.textContent;
+            const wordCount = text.trim() ? text.trim().split(/\s+/).length : 0;
             const charCount = text.length;
             
-            document.querySelector('.status-left').innerHTML = `
-                <span>Words: ${wordCount}</span>
-                <span>Characters: ${charCount}</span>
-            `;
+            document.getElementById('wordCount').textContent = wordCount;
+            document.getElementById('wordCountStatus').textContent = wordCount;
+            document.getElementById('charCountStatus').textContent = charCount.toLocaleString();
+        }
+        
+        // Insert element at cursor position
+        function insertAtCursor(element) {
+            const sel = window.getSelection();
+            if (sel.rangeCount) {
+                const range = sel.getRangeAt(0);
+                range.deleteContents();
+                range.insertNode(element);
+                
+                // Move cursor after the inserted element
+                const newRange = document.createRange();
+                newRange.setStartAfter(element);
+                newRange.collapse(true);
+                sel.removeAllRanges();
+                sel.addRange(newRange);
+            }
+        }
+        
+        // Save editor state for undo/redo
+        function saveState() {
+            // Remove future states if we're not at the end
+            if (historyIndex < editHistory.length - 1) {
+                editHistory = editHistory.slice(0, historyIndex + 1);
+            }
+            
+            // Add current state
+            editHistory.push(editor.innerHTML);
+            historyIndex = editHistory.length - 1;
+            
+            // Limit history size
+            if (editHistory.length > 50) {
+                editHistory.shift();
+                historyIndex--;
+            }
+            
+            // Save to localStorage
+            localStorage.setItem(`ebook-${currentEbook}-chapter-${currentChapter}`, editor.innerHTML);
+        }
+        
+        // Update active button states based on current selection
+        function updateActiveButtons() {
+            // Reset all buttons
+            [boldBtn, italicBtn, underlineBtn, alignLeftBtn, alignCenterBtn, alignRightBtn, alignJustifyBtn].forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Check formatting
+            if (document.queryCommandState('bold')) boldBtn.classList.add('active');
+            if (document.queryCommandState('italic')) italicBtn.classList.add('active');
+            if (document.queryCommandState('underline')) underlineBtn.classList.add('active');
+            
+            // Check alignment
+            if (document.queryCommandState('justifyLeft')) alignLeftBtn.classList.add('active');
+            if (document.queryCommandState('justifyCenter')) alignCenterBtn.classList.add('active');
+            if (document.queryCommandState('justifyRight')) alignRightBtn.classList.add('active');
+            if (document.queryCommandState('justifyFull')) alignJustifyBtn.classList.add('active');
+        }
+        
+        // Event listeners for editor
+        editor.addEventListener('input', () => {
+            updateWordCount();
+            saveState();
         });
+        
+        editor.addEventListener('keyup', updateActiveButtons);
+        editor.addEventListener('mouseup', updateActiveButtons);
+        
+        editor.addEventListener('focus', () => {
+            document.getElementById('editorStatus').textContent = 'Editing...';
+        });
+        
+        editor.addEventListener('blur', () => {
+            document.getElementById('editorStatus').textContent = 'Ready';
+        });
+        
+        // Initialize the editor
+        initEditor();
     </script>
-</body>
-    </html>    <section id="home" class="hero">
-        <div class="hero-container">
-            <div class="hero-content">
-                <h1>Transform Your Ideas into Stunning eBooks</h1>
-                <p>Craft, edit, and publish professional eBooks with our intuitive online editor. No coding required – just your creativity.</p>
-                <div class="hero-buttons">
-                    <a href="#editor" class="btn btn-primary">Start Editing Now</a>
-                    <a href="#features" class="btn btn-secondary">Explore Features</a>
-                </div>
-            </div>
-            <div class="hero-image">
-                <img src="https://via.placeholder.com/600x400/4A90E2/FFFFFF?text=eBook+Editor" alt="eBook Editor Interface">
-            </div>
-        </div>
-    </section>
-
-    <!-- Features Section -->
-    <section id="features" class="features">
-        <div class="container">
-            <h2>Powerful Features for Every Author</h2>
-            <div class="features-grid">
-                <div class="feature-card">
-                    <i class="fas fa-edit"></i>
-                    <h3>Rich Text Editing</h3>
-                    <p>Format text, add images, tables, and hyperlinks with WYSIWYG precision.</p>
-                </div>
-                <div class="feature-card">
-                    <i class="fas fa-table"></i>
-                    <h3>Table of Contents</h3>
-                    <p>Auto-generate dynamic TOCs and navigate seamlessly through chapters.</p>
-                </div>
-                <div class="feature-card">
-                    <i class="fas fa-font"></i>
-                    <h3>Typography Control</h3>
-                    <p>Choose from hundreds of fonts, adjust sizes, and ensure mobile-friendly layouts.</p>
-                </div>
-                <div class="feature-card">
-                    <i class="fas fa-image"></i>
-                    <h3>Media Integration</h3>
-                    <p>Embed images, videos, and audio to bring your story to life.</p>
-                </div>
-                <div class="feature-card">
-                    <i class="fas fa-download"></i>
-                    <h3>Export Options</h3>
-                    <p>Download as EPUB, MOBI, PDF, or HTML for any platform.</p>
-                </div>
-                <div class="feature-card">
-                    <i class="fas fa-cloud-upload-alt"></i>
-                    <h3>Cloud Sync</h3>
-                    <p>Save progress automatically and access from any device.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Editor Demo Section -->
-    <section id="editor" class="editor">
-        <div class="container">
-            <h2>Try the Editor</h2>
-            <p>Experience the power of eBookForge with this live demo. Start typing below!</p>
-            <div class="editor-container">
-                <div class="toolbar">
-                    <button class="tool-btn" onclick="formatText('bold')"><i class="fas fa-bold"></i></button>
-                    <button class="tool-btn" onclick="formatText('italic')"><i class="fas fa-italic"></i></button>
-                    <button class="tool-btn" onclick="formatText('underline')"><i class="fas fa-underline"></i></button>
-                    <button class="tool-btn" onclick="insertImage()"><i class="fas fa-image"></i></button>
-                    <button class="tool-btn" onclick="exportDoc()"><i class="fas fa-download"></i></button>
-                </div>
-                <div class="editor-content" contenteditable="true" id="editorContent">
-                    <p>Welcome to your eBook! Start writing your story here...</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Pricing Section -->
-    <section id="pricing" class="pricing">
-        <div class="container">
-            <h2>Choose Your Plan</h2>
-            <div class="pricing-grid">
-                <div class="price-card">
-                    <h3>Free</h3>
-                    <p class="price">$0<span>/month</span></p>
-                    <ul>
-                        <li>Basic Editing</li>
-                        <li>5 eBooks Max</li>
-                        <li>EPUB Export</li>
-                        <li>Community Support</li>
-                    </ul>
-                    <a href="#" class="btn btn-primary">Get Started</a>
-                </div>
-                <div class="price-card featured">
-                    <span class="featured-badge">Popular</span>
-                    <h3>Pro</h3>
-                    <p class="price">$9.99<span>/month</span></p>
-                    <ul>
-                        <li>All Features</li>
-                        <li>Unlimited eBooks</li>
-                        <li>All Formats</li>
-                        <li>Priority Support</li>
-                    </ul>
-                    <a href="#" class="btn btn-primary">Subscribe Now</a>
-                </div>
-                <div class="price-card">
-                    <h3>Enterprise</h3>
-                    <p class="price">$29.99<span>/month</span></p>
-                    <ul>
-                        <li>Team Collaboration</li>
-                        <li>Custom Branding</li>
-                        <li>API Access</li>
-                        <li>Dedicated Manager</li>
-                    </ul>
-                    <a href="#" class="btn btn-primary">Contact Sales</a>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Contact Section -->
-    <section id="contact" class="contact">
-        <div class="container">
-            <h2>Get in Touch</h2>
-            <p>Have questions? We'd love to hear from you.</p>
-            <form class="contact-form">
-                <input type="text" placeholder="Your Name" required>
-                <input type="email" placeholder="Your Email" required>
-                <textarea placeholder="Your Message" rows="5" required></textarea>
-                <button type="submit" class="btn btn-primary">Send Message</button>
-            </form>
-        </div>
-    </section>
-
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-section">
-                    <div class="logo">
-                        <i class="fas fa-book-open"></i>
-                        <span>eBookForge</span>
-                    </div>
-                    <p>Empowering authors to create digital masterpieces.</p>
-                </div>
-                <div class="footer-section">
-                    <h4>Product</h4>
-                    <ul>
-                        <li><a href="#">Features</a></li>
-                        <li><a href="#">Pricing</a></li>
-                        <li><a href="#">Editor</a></li>
-                    </ul>
-                </div>
-                <div class="footer-section">
-                    <h4>Support</h4>
-                    <ul>
-                        <li><a href="#">Help Center</a></li>
-                        <li><a href="#">Tutorials</a></li>
-                        <li><a href="#">Contact</a></li>
-                    </ul>
-                </div>
-                <div class="footer-section">
-                    <h4>Legal</h4>
-                    <ul>
-                        <li><a href="#">Privacy</a></li>
-                        <li><a href="#">Terms</a></li>
-                        <li><a href="#">Cookies</a></li>
-                    </ul>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <p>&copy; 2025 eBookForge. All rights reserved.</p>
-            </div>
-        </div>
-    </footer>
-
-    <script src="script.js"></script>
 </body>
 </html>
